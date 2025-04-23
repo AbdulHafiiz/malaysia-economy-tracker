@@ -1,0 +1,44 @@
+{
+    "data": [
+        {"year": 1994, "dividend": 9.5, "bonus": 0.0},
+        {"year": 1995, "dividend": 9.5, "bonus": 0.0},
+        {"year": 1996, "dividend": 9.5, "bonus": 0.0},
+        {"year": 1997, "dividend": 9.5, "bonus": 0.0},
+        {"year": 1998, "dividend": 8.0, "bonus": 0.0},
+        {"year": 1999, "dividend": 8.0, "bonus": 0.0},
+        {"year": 2000, "dividend": 5.5, "bonus": 0.0},
+        {"year": 2001, "dividend": 3.25, "bonus": 0.0},
+        {"year": 2002, "dividend": 3.5, "bonus": 0.0},
+        {"year": 2003, "dividend": 4.0, "bonus": 0.0},
+        {"year": 2004, "dividend": 4.3, "bonus": 0.0},
+        {"year": 2005, "dividend": 4.5, "bonus": 0.0},
+        {"year": 2006, "dividend": 4.75, "bonus": 0.0},
+        {"year": 2007, "dividend": 5.0, "bonus": 2.0},
+        {"year": 2008, "dividend": 5.0, "bonus": 0.0},
+        {"year": 2009, "dividend": 5.0, "bonus": 0.0},
+        {"year": 2010, "dividend": 5.5, "bonus": 0.0},
+        {"year": 2011, "dividend": 6.0, "bonus": 0.0},
+        {"year": 2012, "dividend": 6.5, "bonus": 1.5},
+        {"year": 2013, "dividend": 6.0, "bonus": 2.0},
+        {"year": 2014, "dividend": 6.25, "bonus": 2.0},
+        {"year": 2015, "dividend": 5.0, "bonus": 3.0},
+        {"year": 2016, "dividend": 4.25, "bonus": 1.5},
+        {"year": 2017, "dividend": 4.25, "bonus": 1.75},
+        {"year": 2018, "dividend": 1.25, "bonus": 0.0},
+        {"year": 2019, "dividend": 3.05, "bonus": 0.0},
+        {"year": 2020, "dividend": 3.1, "bonus": 0.0},
+        {"year": 2021, "dividend": 3.1, "bonus": 0.0},
+        {"year": 2022, "dividend": 3.1, "bonus": 0.0},
+        {"year": 2023, "dividend": 3.1, "bonus": 0.0}
+    ],
+    "meta": {
+        "data_sources": [
+            {
+                "name": "eCentral",
+                "url": "https://ecentral.my/dividen-tabung-haji-2025/",
+                "date_collected": "2025-04-22",
+                "notes": "Data from 1994 to 2025"
+            }
+        ]
+    }
+}

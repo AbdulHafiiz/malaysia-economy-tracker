@@ -1,0 +1,56 @@
+{
+    "data": [
+        {"year": 1990, "dividend": 8.0, "bonus": 6.0},
+        {"year": 1991, "dividend": 8.5, "bonus": 4.0},
+        {"year": 1992, "dividend": 7.5, "bonus": 5.0},
+        {"year": 1993, "dividend": 9.0, "bonus": 4.5},
+        {"year": 1994, "dividend": 9.5, "bonus": 4.5},
+        {"year": 1995, "dividend": 10.0, "bonus": 3.0},
+        {"year": 1996, "dividend": 10.25, "bonus": 3.0},
+        {"year": 1997, "dividend": 10.25, "bonus": 1.25},
+        {"year": 1998, "dividend": 8.0, "bonus": 2.5},
+        {"year": 1999, "dividend": 8.5, "bonus": 1.5},
+        {"year": 2000, "dividend": 9.75, "bonus": 2.0},
+        {"year": 2001, "dividend": 7.0, "bonus": 3.0},
+        {"year": 2002, "dividend": 7.0, "bonus": 2.0},
+        {"year": 2003, "dividend": 7.25, "bonus": 2.0},
+        {"year": 2004, "dividend": 7.25, "bonus": 2.0},
+        {"year": 2005, "dividend": 7.25, "bonus": 1.75},
+        {"year": 2006, "dividend": 7.3, "bonus": 1.25},
+        {"year": 2007, "dividend": 8.0, "bonus": 1.0},
+        {"year": 2008, "dividend": 7.0, "bonus": 1.75},
+        {"year": 2009, "dividend": 7.3, "bonus": 1.25},
+        {"year": 2010, "dividend": 7.5, "bonus": 1.25},
+        {"year": 2011, "dividend": 7.65, "bonus": 1.15},
+        {"year": 2012, "dividend": 7.75, "bonus": 1.15},
+        {"year": 2013, "dividend": 7.7, "bonus": 1.0},
+        {"year": 2014, "dividend": 7.5, "bonus": 1.0},
+        {"year": 2015, "dividend": 7.25, "bonus": 0.5},
+        {"year": 2016, "dividend": 6.75, "bonus": 0.5},
+        {"year": 2017, "dividend": 7.0, "bonus": 1.25},
+        {"year": 2018, "dividend": 6.5, "bonus": 0.5},
+        {"year": 2019, "dividend": 5.0, "bonus": 0.5},
+        {"year": 2020, "dividend": 3.5, "bonus": 0.75},
+        {"year": 2021, "dividend": 4.25, "bonus": 0.75},
+        {"year": 2022, "dividend": 3.35, "bonus": 1.25},
+        {"year": 2023, "dividend": 4.25, "bonus": 1.0},
+        {"year": 2024, "dividend": 5.5, "bonus": 0.25},
+        {"year": 2025, "dividend": 5.5, "bonus": 0.25}
+    ],
+    "meta": {
+        "data_sources": [
+            {
+                "name": "ASNB",
+                "url": "https://mypf.my/2020/12/23/asb-historical-returns-from-1990-to-2020/", 
+                "date_collected": "2025-04-22",
+                "notes": "Data from 1990 to 2019"
+            },
+            {
+                "name": "MyPF",
+                "url": "https://www.asnb.com.my/asnbv2_4media.php#beritapengumuman",
+                "date_collected": "2025-04-22",
+                "notes": "Data from 2020 to 2025"
+            }
+        ]
+    }
+}
