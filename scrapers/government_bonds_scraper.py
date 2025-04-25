@@ -44,6 +44,8 @@ def scrape_api(latest_datapoint:pd.Timestamp) -> Dict:
     start_date = latest_datapoint.strftime('%Y-%m-%d')
     max_year, min_year = pd.to_datetime('now').year, latest_datapoint.year
 
+    logging.info(f'Scraping data from {latest_datapoint} to {current_date}')
+
     for year in range(max_year, min_year-1, -1):
         date_range = reversed(pd.date_range(max(f'{year}-01-01', start_date), min(f'{year}-12-31', current_date), freq='1d'))
         url_iter = iter([
@@ -94,6 +96,10 @@ def append_data(current_data:Dict, fresh_data:Dict, file_list:List) -> Dict:
         for name in data_names:
             if daily_data := row['data'].get(name):
                 joined_data[name]['data'].extend([{**{k.strip(): v.strip() for k,v in cell.items()}, 'securities_type': 'malaysian_government_securities'} for cell in daily_data])
+
+    # Deduplicate data
+    for name in data_names:
+        joined_data[name]['data'] = pd.DataFrame.from_dict(joined_data[name]['data']).drop_duplicates().reset_index(drop=True).to_dict(orient='records')
 
     for name in data_names:
         joined_data[name]['meta']['data_sources'][0]['date_collected'] = current_date
