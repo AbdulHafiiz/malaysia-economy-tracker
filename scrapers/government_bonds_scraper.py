@@ -9,7 +9,7 @@ from time import perf_counter, sleep
 from typing import Dict, Union, List, AnyStr
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="process_data.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename="bond_data_scraper.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 ROOT_DIR = Path(__file__).parents[1]
 BOND_FILES = ['government_investment_issues.json', 'malaysian_government_securities.json', 'short_terms_bills.json']
 
