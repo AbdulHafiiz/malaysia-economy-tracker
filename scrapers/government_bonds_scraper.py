@@ -8,6 +8,12 @@ from itertools import islice
 from time import perf_counter, sleep
 from typing import Dict, Union, List, AnyStr
 
+# =================================================================
+#   Warning! This code is purposely slow to avoid overloading the
+#   BNM's server. Scraping 20 years worth of data (approx 5k rows)
+#   takes 3 hours (in two 1.5 hr periods).
+# =================================================================
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename="bond_data_scraper.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 ROOT_DIR = Path(__file__).parents[1]
