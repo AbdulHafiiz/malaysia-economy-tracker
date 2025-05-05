@@ -120,8 +120,13 @@ def save_data(latest_data:Dict, save_dir:Path='') -> None:
             f.write(json.dumps(data, indent=4))
             logger.info(f'Saved data for file: {filename}.json in directory: {save_dir}')
 
-if __name__ == '__main__':
+
+def bond_scraper():
     current_data, latest_datapoint = get_latest_datapoint(BOND_FILES)
     bonds_data = scrape_api(latest_datapoint)
     latest_data = append_data(current_data, bonds_data, BOND_FILES)
     save_data(latest_data, ROOT_DIR / 'data' / 'investment_vehicles')
+    return latest_data
+
+if __name__ == '__main__':
+    bond_scraper()
