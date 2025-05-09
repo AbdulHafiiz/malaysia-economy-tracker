@@ -101,7 +101,7 @@ def append_data(current_data:Dict, fresh_data:Dict, file_list:List) -> Dict:
     for row in bonds_filtered_data:
         for name in data_names:
             if daily_data := row['data'].get(name):
-                joined_data[name]['data'].extend([{**{k.strip(): v.strip() for k,v in cell.items()}, 'securities_type': 'malaysian_government_securities'} for cell in daily_data])
+                joined_data[name]['data'].extend([{k.strip(): v.strip() for k,v in cell.items()} for cell in daily_data])
 
     # Deduplicate data
     for name in data_names:
