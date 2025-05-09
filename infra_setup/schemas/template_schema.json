@@ -1,0 +1,15 @@
+// See https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.schema.SchemaField.html for additional attributes
+[
+    {
+        "name": "",
+        "field_type": "",
+        "mode": "",
+        "description": null
+    },
+    {
+        "name": "",
+        "field_type": "",
+        "mode": "",
+        "description": null
+    }
+]
