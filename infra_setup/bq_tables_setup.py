@@ -74,9 +74,9 @@ def create_datasets(dir_path:str|Path = FILEPATH / 'infra_setup/schemas') -> Non
             table_status['failed'].append(table_name)
             logging.error(f'Warning - failed to create table {table_name}. Skipping table. {err}')
 
-    logging.info(f'Succesfully created {len(table_status["successful"])} table{"s" if len(table_status["successful"] > 0) else ""}: {", ".join(table_status["successful"])}')
-    logging.info(f'Failed to create {len(table_status["failed"])} table{"s" if len(table_status["failed"] > 0) else ""}: {", ".join(table_status["failed"])}')
-    logging.info(f'{len(table_status["exists"])} table{"s" if len(table_status["exists"] > 0) else ""} already exist: {", ".join(table_status["exists"])}')
+    logging.info(f'Succesfully created {len(table_status["successful"])} table{"s" if len(table_status["successful"]) > 0 else ""}: {", ".join(table_status["successful"])}')
+    logging.info(f'Failed to create {len(table_status["failed"])} table{"s" if len(table_status["failed"]) > 0 else ""}: {", ".join(table_status["failed"])}')
+    logging.info(f'{len(table_status["exists"])} table{"s" if len(table_status["exists"]) > 0 else ""} already exist: {", ".join(table_status["exists"])}')
 
 
 if __name__ == '__main__':
