@@ -29,7 +29,8 @@
         {"year": 2020, "dividend": 3.1, "bonus": 0.0},
         {"year": 2021, "dividend": 3.1, "bonus": 0.0},
         {"year": 2022, "dividend": 3.1, "bonus": 0.0},
-        {"year": 2023, "dividend": 3.1, "bonus": 0.0}
+        {"year": 2023, "dividend": 3.1, "bonus": 0.0},
+        {"year": 2024, "dividend": 3.25, "bonus": 0.0}
     ],
     "meta": {
         "data_sources": [
