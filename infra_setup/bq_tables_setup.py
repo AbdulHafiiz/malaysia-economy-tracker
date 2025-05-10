@@ -50,7 +50,7 @@ def create_datasets(dir_path:str|Path = FILEPATH / 'infra_setup/schemas') -> Non
         return
 
     for filepath in table_datafiles:
-        if not filepath.name.endswith('_schema.json'):
+        if not filepath.name.endswith('_schema.json') or 'template' in filepath.name:
             continue
 
         table_name = filepath.name.replace('_schema.json', '')
