@@ -20,7 +20,7 @@ BIGQUERY_TIME_PARTITIONS = {
 }
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="bq_table_setup.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename="logs/bq_table_setup.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def parse_schema(schema_path:str|Path) -> list:
