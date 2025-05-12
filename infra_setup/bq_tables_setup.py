@@ -85,10 +85,20 @@ def create_datasets(dir_path:str|Path = FILEPATH / 'infra_setup/schemas') -> Non
                 table_status['exists'].append(table_name)
                 continue
 
-            table_schema = parse_schema(schema_path=filepath.path)
+            table_schema, table_partition = parse_schema(schema_path=filepath.path)
             logging.info(f'Parsed schema for table {table_name}')
 
             table = bigquery.Table(table_ref, table_schema)
+            if isinstance(table_partition, bigquery.TimePartitioning):
+                table.time_partitioning = table_partition
+                logging.info(f'Adding `Time Partitioning` to table on column: {table_partition.field}')
+            elif isinstance(table_partition, bigquery.RangePartitioning):
+                table.range_partitioning = table_partition
+                logging.info(f'Adding `Range Partitioning` to table on column: {table_partition.field}')
+            else:
+                logging.info('Creating table without partition')
+                pass
+            
             table = client.create_table(table)
 
             table_status['successful'].append(table_name)
