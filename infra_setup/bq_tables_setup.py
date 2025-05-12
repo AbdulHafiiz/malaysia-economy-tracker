@@ -31,7 +31,7 @@ def parse_schema(schema_path:str|Path) -> list:
 
     table_schema = [
         bigquery.SchemaField(**field)
-        for field in schema_json['columns']
+        for field in schema_json
     ]
     table_partition = None
 
