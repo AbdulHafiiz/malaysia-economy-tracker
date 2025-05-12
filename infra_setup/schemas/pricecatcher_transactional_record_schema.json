@@ -1,26 +1,33 @@
-[
-    {
-        "name": "date",
-        "field_type": "TIMESTAMP",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "premise_code",
-        "field_type": "INTEGER",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "item_code",
-        "field_type": "INTEGER",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "price",
-        "field_type": "FLOAT",
-        "mode": "NULLABLE",
-        "description": null
+{
+    "columns": [
+        {
+            "name": "date",
+            "field_type": "TIMESTAMP",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "premise_code",
+            "field_type": "INTEGER",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "item_code",
+            "field_type": "INTEGER",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        }
+    ],
+    "partitions": {
+        "type": "TIME",
+        "field": "date",
+        "range": "MONTH"
     }
-]
+}

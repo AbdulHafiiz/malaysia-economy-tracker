@@ -1,15 +1,22 @@
 // See https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.schema.SchemaField.html for additional attributes
-[
-    {
-        "name": "",
-        "field_type": "",
-        "mode": "",
-        "description": null
-    },
-    {
-        "name": "",
-        "field_type": "",
-        "mode": "",
-        "description": null
+{
+    "columns": [
+        {
+            "name": "",
+            "field_type": "",
+            "mode": "",
+            "description": null
+        },
+        {
+            "name": "",
+            "field_type": "",
+            "mode": "",
+            "description": null
+        }
+    ],
+    "partitions": {
+        "type": // See https://cloud.google.com/bigquery/docs/creating-partitioned-tables#python for partition types,
+        "field": // The column to partition on
+        "range": // 'HOUR', 'DAY', 'MONTH', 'YEAR' for timepartition or interval in the case of integer parititoning
     }
-]
+}

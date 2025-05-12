@@ -12,19 +12,43 @@ load_dotenv(FILEPATH / 'secrets/.env', override=True)
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 
+BIGQUERY_TIME_PARTITIONS = {
+    'HOUR': bigquery.TimePartitioningType.HOUR,
+    'DAY': bigquery.TimePartitioningType.DAY,
+    'MONTH': bigquery.TimePartitioningType.MONTH,
+    'YEAR': bigquery.TimePartitioningType.YEAR,
+}
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename="bq_table_setup.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 def parse_schema(schema_path:str|Path) -> list:
     with open(schema_path, 'r') as f:
-        schema_json = json.loads(f.read())
+        json_data = json.loads(f.read())
+        schema_json = json_data['columns']
+        partition_json = json_data['partitions']
 
     table_schema = [
         bigquery.SchemaField(**field)
-        for field in schema_json
+        for field in schema_json['columns']
     ]
-    return table_schema
+    table_partition = None
+
+    if partition_json['type'] == 'TIME':
+        table_partition = bigquery.TimePartitioning(
+            type_=BIGQUERY_TIME_PARTITIONS[partition_json['range']],
+            field=partition_json['field']
+        )
+    elif partition_json['type'] == 'INTEGER':
+        table_partition = bigquery.TimePartitioning(
+            range_=bigquery.PartitionRange(interval=partition_json['range']),
+            field=partition_json['field']
+        )
+    else:
+        logging.warning(f'Partition type {partition_json["type"]} does not match "TIME" or "INTEGER". Select one of the two to partition the table. Defaulting to no partition.')
+
+    return table_schema, table_partition
 
 
 def check_table_exists(client:bigquery.Client, table_name:str) -> bool:
