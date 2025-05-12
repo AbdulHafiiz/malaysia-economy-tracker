@@ -1,32 +1,39 @@
-[
-    {
-        "name": "item_code",
-        "field_type": "INTEGER",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "item",
-        "field_type": "STRING",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "unit",
-        "field_type": "STRING",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "item_group",
-        "field_type": "STRING",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "item_category",
-        "field_type": "STRING",
-        "mode": "NULLABLE",
-        "description": null
+{
+    "columns": [
+        {
+            "name": "item_code",
+            "field_type": "INTEGER",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "item",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "unit",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "item_group",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "item_category",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": null
+        }
+    ],
+    "partitions": {
+        "type": null,
+        "field": null,
+        "range": null
     }
-]
+}

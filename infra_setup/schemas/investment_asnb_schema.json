@@ -1,20 +1,27 @@
-[
-    {
-        "name": "year",
-        "field_type": "DATE",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "dividend",
-        "field_type": "FLOAT",
-        "mode": "NULLABLE",
-        "description": null
-    },
-    {
-        "name": "bonus",
-        "field_type": "FLOAT",
-        "mode": "NULLABLE",
-        "description": null
+{
+    "columns": [
+        {
+            "name": "year",
+            "field_type": "DATE",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "dividend",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "bonus",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        }
+    ],
+    "partitions": {
+        "type": null,
+        "field": null,
+        "range": null
     }
-]
+}
