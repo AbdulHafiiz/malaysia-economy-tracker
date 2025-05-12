@@ -1,0 +1,38 @@
+[
+    {
+        "name": "premise_code",
+        "field_type": "INTEGER",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "premise",
+        "field_type": "STRING",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "address",
+        "field_type": "STRING",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "premise_type",
+        "field_type": "STRING",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "state",
+        "field_type": "STRING",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "district",
+        "field_type": "STRING",
+        "mode": "NULLABLE",
+        "description": null
+    }
+]

@@ -1,0 +1,50 @@
+[
+    {
+        "name": "trading_date",
+        "field_type": "DATE",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "tenure",
+        "field_type": "STRING",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "maturity_date",
+        "field_type": "DATE",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "tra_yie_low",
+        "field_type": "FLOAT",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "tra_yie_high",
+        "field_type": "FLOAT",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "tra_yie_close",
+        "field_type": "FLOAT",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "tot_vol",
+        "field_type": "FLOAT",
+        "mode": "NULLABLE",
+        "description": null
+    },
+    {
+        "name": "daily_change",
+        "field_type": "FLOAT",
+        "mode": "NULLABLE",
+        "description": null
+    }
+]
