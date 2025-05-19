@@ -1,0 +1,21 @@
+{
+    "columns": [
+        {
+            "name": "tablename",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "latest_date",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": "Date of the latest updated row in table"
+        }
+    ],
+    "partitions": {
+        "type": null,
+        "field": null,
+        "range": null
+    }
+}
