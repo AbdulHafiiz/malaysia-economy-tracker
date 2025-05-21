@@ -21,7 +21,7 @@ logging.basicConfig(filename="logs/pricecatcher_transactions_scraper.log", filem
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 
-write_client = bigquery.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
+write_client = bigquery.Client.from_service_account_json(FILEPATH / 'code/secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 dataset = write_client.dataset(GCP_DATASET_NAME)
 
 def get_latest_date() -> str:
