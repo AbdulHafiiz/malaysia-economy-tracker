@@ -1,0 +1,17 @@
+services:
+  pricecatcher-scraper:
+    build:
+      context: "${PWD}"
+      dockerfile: "${PWD}/docker/Dockerfile.pricecatcher"
+    env_file: "${PWD}/secrets/.env"
+    # environment:
+    #   - SERVICE_ACCOUNT_FILE="SERVICE_ACCOUNT_FILE.json"
+    secrets:
+      - source: "SERVICE_ACCOUNT_FILE"
+        target: "/code/secrets/SERVICE_ACCOUNT_FILE.json"
+    ports:
+      - 8080
+
+secrets:
+  SERVICE_ACCOUNT_FILE:
+    file: "${PWD}/secrets/SERVICE_ACCOUNT_FILE.json"
