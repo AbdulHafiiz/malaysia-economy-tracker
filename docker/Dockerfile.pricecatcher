@@ -4,8 +4,7 @@ WORKDIR /code
 ENV PYTHONPATH="/code"
 ENV PYTHONUNBUFFERED=1
 
-RUN mkdir -p /code/secrets && \
-    mkdir -p /code/logs
+RUN mkdir -p /code/secrets
 COPY scrapers/pricecatcher_transactions_scraper.py /code/main.py
 COPY requirements.txt /code/requirements.txt
 RUN pip install --upgrade pip && \

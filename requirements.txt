@@ -2,6 +2,7 @@ db-dtypes==1.4.3
 fastavro==1.11.1
 fastparquet==2024.11.0
 google-cloud-bigquery==3.32.0
+google-cloud-logging==3.12.1
 grequests==0.7.0
 ipykernel==6.29.5
 matplotlib==3.10.3

@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 from pathlib import Path
 from textwrap import dedent
+import google.cloud.logging
 from typing import Generator
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -15,8 +16,8 @@ from urllib.error import HTTPError
 FILEPATH = Path(__file__).parents[1]
 load_dotenv(FILEPATH / '/secrets/.env', override=True)
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(filename="logs/pricecatcher_transactions_scraper.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = google.cloud.logging.Client()
+logger.setup_logging(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
