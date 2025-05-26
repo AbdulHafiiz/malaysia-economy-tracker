@@ -106,6 +106,9 @@ def upload_scraped_data(latest_date: str) -> None:
     return
 
 
-if __name__ == '__main__':
+def pricecatcher_transaction_scraper() -> None:
     latest_date = get_latest_date()
     upload_scraped_data(latest_date=latest_date)
+
+if __name__ == '__main__':
+    pricecatcher_transaction_scraper()
