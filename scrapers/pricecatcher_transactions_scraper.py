@@ -16,7 +16,7 @@ from urllib.error import HTTPError
 FILEPATH = Path(__file__).parents[1]
 load_dotenv(FILEPATH / '/secrets/.env', override=True)
 
-logger = google.cloud.logging.Client()
+logger = google.cloud.logging.Client.from_service_account_json(FILEPATH / 'code/secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 logger.setup_logging(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
@@ -63,6 +63,9 @@ def upload_scraped_data(latest_date: str) -> None:
         transaction_df = temp_df.drop_duplicates(subset=['date', 'premise_code', 'item_code'])
         transaction_df = transaction_df.reset_index(drop=True).astype({'date': 'datetime64[s]'})
         transaction_df = transaction_df[transaction_df['date'] > latest_date]
+        if transaction_df.empty():
+            logging.info(f'No data to scrape')
+            return
         updated_date = transaction_df['date'].max().strftime('%Y-%m-%d')
 
         for idx, df_slice in enumerate(batch_slice(transaction_df, 1_000_000)):
