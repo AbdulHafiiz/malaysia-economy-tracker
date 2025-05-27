@@ -14,15 +14,17 @@ from google.cloud import bigquery
 from urllib.error import HTTPError
 
 FILEPATH = Path(__file__).parents[1]
-load_dotenv(FILEPATH / '/secrets/.env', override=True)
+load_dotenv(FILEPATH / 'secrets/.env', override=True)
 
-logger = google.cloud.logging.Client.from_service_account_json(FILEPATH / 'code/secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
-logger.setup_logging(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename="pricecatcher_transactions_scraper.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# logger = google.cloud.logging.Client.from_service_account_json(FILEPATH / 'code/secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
+# logger.setup_logging(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 
-write_client = bigquery.Client.from_service_account_json(FILEPATH / 'code/secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
+write_client = bigquery.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 dataset = write_client.dataset(GCP_DATASET_NAME)
 
 def get_latest_date() -> str:
@@ -61,12 +63,11 @@ def upload_scraped_data(latest_date: str) -> None:
 
         temp_df['date'] = pd.to_datetime(temp_df['date'])
         transaction_df = temp_df.drop_duplicates(subset=['date', 'premise_code', 'item_code'])
-        transaction_df = transaction_df.reset_index(drop=True).astype({'date': 'datetime64[s]'})
         transaction_df = transaction_df[transaction_df['date'] > latest_date]
-        if transaction_df.empty():
+        transaction_df = transaction_df.reset_index(drop=True).astype({'date': 'datetime64[s]'})
+        if transaction_df.empty:
             logging.info(f'No data to scrape')
             return
-        updated_date = transaction_df['date'].max().strftime('%Y-%m-%d')
 
         for idx, df_slice in enumerate(batch_slice(transaction_df, 1_000_000)):
             buf_t = perf_counter()
@@ -91,6 +92,8 @@ def upload_scraped_data(latest_date: str) -> None:
             load_job.result()
             load_t2 = perf_counter() - load_t
             loaded_rows = write_client.get_table(table_ref).num_rows - initial_row_count
+
+            updated_date = df_slice['date'].max().strftime('%Y-%m-%d')
 
             logging.info(f'Batch {idx+1} finished')
             logging.info(f'Data loaded for {df_slice["date"].unique()}')
