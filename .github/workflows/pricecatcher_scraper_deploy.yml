@@ -42,6 +42,7 @@ jobs:
           echo GCP_REGION_NAME='${{ secrets.GCP_REGION }}' >> secrets/.env
           echo SERVICE_ACCOUNT_FILE='${{ secrets.SERVICE_ACCOUNT_FILE }}' >> secrets/.env
           docker compose -f ./docker/docker-compose.yml up --build
+          rm -f secrets/.env
           docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}
           docker logout
 
