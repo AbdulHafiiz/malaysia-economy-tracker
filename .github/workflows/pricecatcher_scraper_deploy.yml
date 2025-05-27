@@ -33,21 +33,14 @@ jobs:
           registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}'
           password: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
-      - name: Make Env File
-        if: success()
-        uses: SpicyPizza/create-envfile@v2.0
-        with:
-          envkey_GCP_PROJECT_NAME: '${{ secrets.GCP_PROJECT_ID }}'
-          envkey_GCP_DATASET_NAME: '${{ secrets.GCP_DATASET_NAME }}'
-          envkey_GCP_REGION_NAME: '${{ secrets.GCP_REGION }}'
-          envkey_SERVICE_ACCOUNT_FILE: '${{ secrets.SERVICE_ACCOUNT_FILE }}'
-          directory: 'secrets/'
-          file_name: '.env'
-          fail_on_empty: true
-
       - name: Push Container
         if: success()
         run: |
+          touch secrets/.env
+          echo GCP_PROJECT_NAME='${{ secrets.GCP_PROJECT_ID }}' >> secrets/.env
+          echo GCP_DATASET_NAME='${{ secrets.GCP_DATASET_NAME }}' >> secrets/.env
+          echo GCP_REGION_NAME='${{ secrets.GCP_REGION }}' >> secrets/.env
+          echo SERVICE_ACCOUNT_FILE='${{ secrets.SERVICE_ACCOUNT_FILE }}' >> secrets/.env
           docker compose -f ./docker/docker-compose.yml up --build
           docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}
           docker logout
