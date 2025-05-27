@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Google Cloud Auth
@@ -32,6 +32,17 @@ jobs:
           username: _json_key
           registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}'
           password: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: Make Env File
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_GCP_PROJECT_NAME: '${{ secrets.GCP_PROJECT_ID }}'
+          envkey_GCP_DATASET_NAME: '${{ secrets.GCP_DATASET_NAME }}'
+          envkey_GCP_REGION_NAME: '${{ secrets.GCP_REGION }}'
+          envkey_SERVICE_ACCOUNT_FILE: '${{ secrets.SERVICE_ACCOUNT_FILE }}'
+          directory: "${{ github.workspace }}/secrets/.env"
+          file_name: '.env'
+          fail_on_empty: true
 
       - name: Push Container
         if: success()
