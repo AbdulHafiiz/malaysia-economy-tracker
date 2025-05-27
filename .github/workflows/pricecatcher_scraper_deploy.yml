@@ -41,7 +41,7 @@ jobs:
           envkey_GCP_DATASET_NAME: '${{ secrets.GCP_DATASET_NAME }}'
           envkey_GCP_REGION_NAME: '${{ secrets.GCP_REGION }}'
           envkey_SERVICE_ACCOUNT_FILE: '${{ secrets.SERVICE_ACCOUNT_FILE }}'
-          directory: 'secrets/.env'
+          directory: 'secrets/'
           file_name: '.env'
           fail_on_empty: true
 
