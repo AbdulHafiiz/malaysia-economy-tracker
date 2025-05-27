@@ -1,6 +1,4 @@
 env:
-  PROJECT_ID: '${{ secrets.GCP_PROJECT_ID }}'
-  REGION: '${{ secrets.GCP_REGION }}'
   SERVICE_NAME: pricecatcher-scraper
   
 on:
@@ -23,7 +21,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
-          project_id: '${{ env.PROJECT_ID }}'
+          project_id: '${{ secrets.GCP_PROJECT_ID }}'
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
@@ -32,14 +30,14 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: _json_key
-          registry: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_name }}'
+          registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}'
           password: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
-      - name: Build and Push Container
+      - name: Push Container
         if: success()
         run: |-
           docker compose -f ./docker/docker-compose.yml up --build
-          docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}
+          docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}
           docker logout
 
       - name: Deploy to Cloud Run
@@ -47,8 +45,8 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
           service: '${{ env.SERVICE_NAME }}'
-          region: '${{ env.REGION }}'
-          image: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}'
+          region: '${{ secrets.GCP_REGION }}'
+          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}'
 
       - name: 'Show output'
         run: |2-
