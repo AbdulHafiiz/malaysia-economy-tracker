@@ -39,8 +39,10 @@ jobs:
           echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
           echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
           echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}
+          export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
           docker compose -f ./docker/docker-compose.yml up --build
-          docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
+          rm -rf secrets/
+          docker push ${{ DOCKER_TAG }}
           docker logout
 
       - name: Deploy to Cloud Run
@@ -52,5 +54,4 @@ jobs:
           image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
 
       - name: 'Show output'
-        run: |2-
-          echo ${{ steps.deploy.outputs.url }}
+        run: echo ${{ steps.deploy.outputs.url }}

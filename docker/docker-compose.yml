@@ -8,6 +8,7 @@ services:
         target: "/code/secrets/SERVICE_ACCOUNT_FILE.json"
       - source: "ENVIRONMENT"
         target: "/code/secrets/.env"
+    image: $DOCKER_TAG
     ports:
       - 8080
 
