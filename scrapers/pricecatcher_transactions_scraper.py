@@ -16,7 +16,7 @@ from urllib.error import HTTPError
 FILEPATH = Path(__file__).parents[1]
 load_dotenv(FILEPATH / 'secrets/.env', override=True)
 
-logger = google.cloud.logging.Client.from_service_account_json(FILEPATH / 'code/secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
+logger = google.cloud.logging.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 logger.setup_logging(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
