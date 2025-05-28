@@ -7,9 +7,13 @@ services:
     secrets:
       - source: "SERVICE_ACCOUNT_FILE"
         target: "/code/secrets/SERVICE_ACCOUNT_FILE.json"
+      - source: "ENVIRONMENT"
+        target: "/code/secrets/.env"
     ports:
       - 8080
 
 secrets:
   SERVICE_ACCOUNT_FILE:
     file: "${PWD}/secrets/SERVICE_ACCOUNT_FILE.json"
+  ENVIRONMENT:
+    file: "${PWD}/secrets/.env"

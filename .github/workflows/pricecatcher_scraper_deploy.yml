@@ -1,6 +1,3 @@
-env:
-  SERVICE_NAME: pricecatcher-scraper
-  
 on:
   push:
     branches:
@@ -30,7 +27,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: _json_key
-          registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}'
+          registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}'
           password: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - name: Build and Push Container
@@ -42,16 +39,16 @@ jobs:
           echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
           echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
           docker compose -f ./docker/docker-compose.yml up --build
-          docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}
+          docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
           docker logout
 
       - name: Deploy to Cloud Run
         if: success()
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
-          service: '${{ env.SERVICE_NAME }}'
+          service: '${{ secrets.SERVICE_NAME }}'
           region: '${{ secrets.GCP_REGION }}'
-          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}'
+          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
 
       - name: 'Show output'
         run: |2-
