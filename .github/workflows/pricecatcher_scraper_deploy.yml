@@ -47,7 +47,7 @@ jobs:
         if: success()
         uses: 'google-github-actions/deploy-cloudrun@v2'
         with:
-          service: '${{ secrets.SERVICE_NAME }}'
+          job: '${{ secrets.SERVICE_NAME }}'
           region: '${{ secrets.GCP_REGION }}'
           image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
 

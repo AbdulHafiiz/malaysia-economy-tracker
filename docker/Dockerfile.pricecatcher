@@ -12,4 +12,4 @@ RUN pip install --upgrade pip && \
 
 EXPOSE 8080
 
-CMD ["python3", "/code/scrapers/main.py"]
+ENTRYPOINT ["python3", "/code/scrapers/main.py"]
