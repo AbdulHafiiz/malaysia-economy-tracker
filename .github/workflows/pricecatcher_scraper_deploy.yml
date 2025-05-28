@@ -38,6 +38,7 @@ jobs:
           echo "GCP_DATASET_NAME=${{ secrets.GCP_DATASET_NAME }}" >> secrets/.env
           echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
           echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}
           docker compose -f ./docker/docker-compose.yml up --build
           docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
           docker logout

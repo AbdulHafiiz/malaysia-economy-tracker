@@ -3,7 +3,6 @@ services:
     build:
       context: "${PWD}"
       dockerfile: "${PWD}/docker/Dockerfile.pricecatcher"
-    env_file: "${PWD}/secrets/.env"
     secrets:
       - source: "SERVICE_ACCOUNT_FILE"
         target: "/code/secrets/SERVICE_ACCOUNT_FILE.json"
