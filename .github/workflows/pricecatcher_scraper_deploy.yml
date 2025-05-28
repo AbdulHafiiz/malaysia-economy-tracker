@@ -33,16 +33,15 @@ jobs:
           registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}'
           password: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
-      - name: Push Container
+      - name: Build and Push Container
         if: success()
         run: |
           touch secrets/.env
-          echo GCP_PROJECT_NAME='${{ secrets.GCP_PROJECT_ID }}' >> secrets/.env
-          echo GCP_DATASET_NAME='${{ secrets.GCP_DATASET_NAME }}' >> secrets/.env
-          echo GCP_REGION_NAME='${{ secrets.GCP_REGION }}' >> secrets/.env
-          echo SERVICE_ACCOUNT_FILE='${{ secrets.SERVICE_ACCOUNT_FILE }}' >> secrets/.env
+          echo "GCP_PROJECT_NAME=${{ secrets.GCP_PROJECT_ID }}" >> secrets/.env
+          echo "GCP_DATASET_NAME=${{ secrets.GCP_DATASET_NAME }}" >> secrets/.env
+          echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
+          echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
           docker compose -f ./docker/docker-compose.yml up --build
-          rm -f secrets/.env
           docker push ${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.SERVICE_name }}:${{ github.sha }}
           docker logout
 
