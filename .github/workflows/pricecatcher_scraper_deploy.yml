@@ -1,0 +1,58 @@
+on:
+  push:
+    branches:
+      - cloud_run_scrapers
+  pull_request:
+    branches:
+      - clour_run_scrapers
+
+jobs:
+  dockerize-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Google Cloud Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+          project_id: '${{ secrets.GCP_PROJECT_ID }}'
+
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Docker Auth
+        uses: docker/login-action@v3
+        with:
+          username: _json_key
+          registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}'
+          password: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: Build and Push Container
+        if: success()
+        run: |
+          touch secrets/.env
+          echo "GCP_PROJECT_NAME=${{ secrets.GCP_PROJECT_ID }}" >> secrets/.env
+          echo "GCP_DATASET_NAME=${{ secrets.GCP_DATASET_NAME }}" >> secrets/.env
+          echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
+          echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}
+          export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
+          docker compose -f ./docker/docker-compose.yml up --build
+          rm -rf secrets/
+          docker push ${DOCKER_TAG}
+          docker logout
+
+      - name: Deploy to Cloud Run
+        if: success()
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          job: '${{ secrets.SERVICE_NAME }}'
+          region: '${{ secrets.GCP_REGION }}'
+          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
+          flags: --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+
+      - name: 'Show output'
+        run: echo ${{ steps.deploy.outputs.url }}

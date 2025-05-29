@@ -1,0 +1,15 @@
+FROM python:3.11-slim-bullseye
+WORKDIR /code
+
+ENV PYTHONPATH="/code"
+ENV PYTHONUNBUFFERED=1
+
+RUN mkdir -p /code/secrets
+COPY scrapers/pricecatcher_transactions_scraper.py /code/scrapers/main.py
+COPY requirements.txt /code/requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt -q
+
+EXPOSE 8080
+
+ENTRYPOINT ["python3", "/code/scrapers/main.py"]

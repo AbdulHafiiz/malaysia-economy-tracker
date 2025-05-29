@@ -81,7 +81,6 @@ def create_datasets(dir_path:str|Path = FILEPATH / 'infra_setup/schemas') -> Non
         table_ref = dataset.table(table_name)
         try:
             if check_table_exists(client, table_ref):
-                logging.info(f'Table {table_name} already exists, skipping')
                 table_status['exists'].append(table_name)
                 continue
 
