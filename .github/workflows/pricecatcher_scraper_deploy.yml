@@ -52,7 +52,7 @@ jobs:
           job: '${{ secrets.SERVICE_NAME }}'
           region: '${{ secrets.GCP_REGION }}'
           image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}g:${{ github.sha }}'
-          flags: --service-account=${{ SERVICE_ACCOUNT_EMAIL }}
+          flags: --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
 
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
