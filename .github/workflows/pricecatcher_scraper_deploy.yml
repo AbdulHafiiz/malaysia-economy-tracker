@@ -39,7 +39,7 @@ jobs:
           echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
           echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
           echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}
-          export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
+          export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}g:${{ github.sha }}'
           docker compose -f ./docker/docker-compose.yml up --build
           rm -rf secrets/
           docker push ${DOCKER_TAG}
@@ -51,7 +51,8 @@ jobs:
         with:
           job: '${{ secrets.SERVICE_NAME }}'
           region: '${{ secrets.GCP_REGION }}'
-          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
+          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}g:${{ github.sha }}'
+          flags: --service-account=${{ SERVICE_ACCOUNT_EMAIL }}
 
       - name: 'Show output'
         run: echo ${{ steps.deploy.outputs.url }}
