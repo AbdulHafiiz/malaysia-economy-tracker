@@ -15,7 +15,7 @@ FILEPATH = Path(__file__).parents[1]
 if load_dotenv(FILEPATH / 'secrets/.env', override=True):
     print('Loaded .env file')
 else:
-    raise FileNotFoundError('Failed to load .env file')
+    raise FileNotFoundError(f'Failed to load .env file at path {FILEPATH}. {os.listdir(FILEPATH)}')
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
