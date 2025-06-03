@@ -33,21 +33,8 @@ jobs:
       - name: Build and Push Container
         if: success()
         run: |
-          touch "${{ github.workspace }}/secrets/.env"
-          ls "${{ github.workspace }}/secrets"
-          echo "====================\n\n"
-          echo "GCP_PROJECT_NAME=${{ secrets.GCP_PROJECT_ID }}" >> "${{ github.workspace }}/secrets/.env"
-          echo "GCP_DATASET_NAME=${{ secrets.GCP_DATASET_NAME }}" >> "${{ github.workspace }}/secrets/.env"
-          echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> "${{ github.workspace }}/secrets/.env"
-          echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> "${{ github.workspace }}/secrets/.env"
-          echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> "${{ github.workspace }}/secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}"
           export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
           docker compose -f ./docker/docker-compose.yml up --build
-          echo "${{ github.workspace }}"
-          echo "====================\n\n"
-          ls "${{ github.workspace }}/secrets"
-          echo "====================\n\n"
-          rm -rf secrets/
           docker push ${DOCKER_TAG}
           docker logout
 
@@ -58,4 +45,6 @@ jobs:
           job: '${{ secrets.SERVICE_NAME }}'
           region: '${{ secrets.GCP_REGION }}'
           image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
-          flags: --service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+          flags: >
+            '--service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}'
+            '--set-secrets=ENV_FILE=${{ secrets.PRICECATCHER_ENV }}:latest,"/code/secrets/${{ secrets.SERVICE_ACCOUNT_FILENAME }}"=${{ secrets.PRICECATCHER_CREDENTIALS }}:latest'

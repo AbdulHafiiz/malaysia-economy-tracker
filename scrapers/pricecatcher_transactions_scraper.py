@@ -1,6 +1,7 @@
 import os
 import io
 import pandas as pd
+from io import StringIO
 from pathlib import Path
 from textwrap import dedent
 from typing import Generator
@@ -14,8 +15,11 @@ from urllib.error import HTTPError
 FILEPATH = Path(__file__).parents[1]
 if load_dotenv(FILEPATH / 'secrets/.env', override=True):
     print('Loaded .env file')
+elif env_file := os.getenv('ENV_FILE'):
+    load_dotenv(stream=StringIO(env_file))
+    print('Loaded .env file')
 else:
-    raise FileNotFoundError(f'Failed to load .env file at path {FILEPATH}. {os.listdir(FILEPATH / "secrets")}')
+    raise ValueError('Failed to load .env variables')
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
