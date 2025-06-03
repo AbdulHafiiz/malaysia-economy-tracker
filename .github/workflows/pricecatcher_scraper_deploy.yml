@@ -33,12 +33,12 @@ jobs:
       - name: Build and Push Container
         if: success()
         run: |
-          touch secrets/.env
-          echo "GCP_PROJECT_NAME=${{ secrets.GCP_PROJECT_ID }}" >> secrets/.env
-          echo "GCP_DATASET_NAME=${{ secrets.GCP_DATASET_NAME }}" >> secrets/.env
-          echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> secrets/.env
-          echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> secrets/.env
-          echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}
+          touch "${{ github.workspace }}/secrets/.env"
+          echo "GCP_PROJECT_NAME=${{ secrets.GCP_PROJECT_ID }}" >> "${{ github.workspace }}/secrets/.env"
+          echo "GCP_DATASET_NAME=${{ secrets.GCP_DATASET_NAME }}" >> "${{ github.workspace }}/secrets/.env"
+          echo "GCP_REGION_NAME=${{ secrets.GCP_REGION }}" >> "${{ github.workspace }}/secrets/.env"
+          echo "SERVICE_ACCOUNT_FILE=${{ secrets.SERVICE_ACCOUNT_FILE }}" >> "${{ github.workspace }}/secrets/.env"
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' >> "${{ github.workspace }}/secrets/${{ secrets.SERVICE_ACCOUNT_FILE }}"
           export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
           docker compose -f ./docker/docker-compose.yml up --build
           rm -rf secrets/
