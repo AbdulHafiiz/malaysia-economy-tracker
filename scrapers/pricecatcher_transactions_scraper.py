@@ -24,23 +24,18 @@ else:
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 
-AUTH_PATH = Path(FILEPATH / 'secrets')
+AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 
-if (AUTH_PATH / os.getenv('SERVICE_ACCOUNT_FILE')).exists():
-    bq_path = AUTH_PATH / os.getenv('SERVICE_ACCOUNT_FILE')
-    print(f'Auth Path Local: {bq_path}')
-
-elif (AUTH_PATH / os.getenv('SERVICE_ACCOUNT_AUTH')).exists():
-    bq_path = AUTH_PATH / os.getenv('SERVICE_ACCOUNT_AUTH')
-    print(f'Auth Path Cloud {bq_path}')
-    print(os.getenv('SERVICE_ACCOUNT_AUTH'))
-    with open(bq_path, 'w') as f:
-        f.write(os.getenv('SERVICE_ACCOUNT_AUTH'))
-
+if AUTH_PATH.exists():
+    print(f'Auth Path Local: {AUTH_PATH}')
+elif os.getenv('SERVICE_ACCOUNT_AUTH'):
+    print(f'Auth Path Cloud {AUTH_PATH}')
+    with open(AUTH_PATH, 'w') as f:
+        f.write(os.getenv(os.getenv('SERVICE_ACCOUNT_AUTH')))
 else:
-    raise ValueError('Failed to load bgiquery auth credentials')
+    raise ValueError('Failed to load bigquery auth credentials')
 
-write_client = bigquery.Client.from_service_account_json(bq_path)
+write_client = bigquery.Client.from_service_account_json(AUTH_PATH)
 dataset = write_client.dataset(GCP_DATASET_NAME)
 
 def get_latest_date() -> str:
