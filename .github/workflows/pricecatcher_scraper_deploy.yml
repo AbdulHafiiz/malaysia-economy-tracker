@@ -47,4 +47,4 @@ jobs:
           image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}'
           flags: >
             '--service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}'
-            '--update-secrets=ENV_FILE=${{ secrets.PRICECATCHER_ENV }}:latest,"${{ secrets.SERVICE_NAME }}_auth"=${{ secrets.PRICECATCHER_CREDENTIALS }}:latest'
+            '--update-secrets=ENV_FILE=${{ secrets.PRICECATCHER_ENV }}:latest,"${{ secrets.SERVICE_NAME }}-auth"=${{ secrets.PRICECATCHER_CREDENTIALS }}:latest'
