@@ -28,10 +28,10 @@ AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 
 if AUTH_PATH.exists():
     print(f'Auth Path Local: {AUTH_PATH}')
-elif os.getenv('SERVICE_ACCOUNT_AUTH'):
+elif auth_file := os.getenv(os.getenv('SERVICE_ACCOUNT_AUTH')):
     print(f'Auth Path Cloud {AUTH_PATH}')
     with open(AUTH_PATH, 'w') as f:
-        f.write(os.getenv(os.getenv('SERVICE_ACCOUNT_AUTH')))
+        f.write(auth_file)
 else:
     raise ValueError('Failed to load bigquery auth credentials')
 
