@@ -28,12 +28,17 @@ AUTH_PATH = Path(FILEPATH / 'secrets')
 
 if (AUTH_PATH / os.getenv('SERVICE_ACCOUNT_FILE')).exists():
     bq_path = AUTH_PATH / os.getenv('SERVICE_ACCOUNT_FILE')
+    print(f'Auth Path Local: {bq_path}')
 
 elif (AUTH_PATH / os.getenv('SERVICE_ACCOUNT_AUTH')).exists():
     bq_path = AUTH_PATH / os.getenv('SERVICE_ACCOUNT_AUTH')
+    print(f'Auth Path Cloud {bq_path}')
     print(os.getenv('SERVICE_ACCOUNT_AUTH'))
     with open(bq_path, 'w') as f:
         f.write(os.getenv('SERVICE_ACCOUNT_AUTH'))
+
+else:
+    raise ValueError('Failed to load bgiquery auth credentials')
 
 write_client = bigquery.Client.from_service_account_json(bq_path)
 dataset = write_client.dataset(GCP_DATASET_NAME)
