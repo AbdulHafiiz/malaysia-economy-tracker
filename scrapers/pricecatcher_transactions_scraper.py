@@ -26,6 +26,7 @@ GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 
 AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 if not AUTH_PATH.exists():
+    print(os.getenv('SERVICE_ACCOUNT_FILE'))
     with open(AUTH_PATH, 'w') as f:
         f.write(os.getenv('SERVICE_ACCOUNT_FILE'))
 
