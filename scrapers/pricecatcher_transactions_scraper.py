@@ -28,14 +28,14 @@ AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 
 if AUTH_PATH.exists():
     print(f'Auth Path Local: {AUTH_PATH}')
-elif auth_file := os.getenv(os.getenv('SERVICE_ACCOUNT_FILE')):
+elif auth_file := os.getenv(os.getenv('GCP_SERVICE_NAME')):
     print(f'Auth Path Cloud {AUTH_PATH}')
     with open(AUTH_PATH, 'w') as f:
         f.write(auth_file)
 else:
     print(dedent(
         f'''
-        {os.getenv('SERVICE_ACCOUNT_FILE')}
+        {os.getenv('GCP_SERVICE_NAME')}
         {os.environ}
         '''
     ))
