@@ -24,13 +24,18 @@ else:
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 
-AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
-if not AUTH_PATH.exists():
-    print(os.getenv('SERVICE_ACCOUNT_FILE'))
-    with open(AUTH_PATH, 'w') as f:
-        f.write(os.getenv('SERVICE_ACCOUNT_FILE'))
+AUTH_PATH = Path(FILEPATH / 'secrets')
 
-write_client = bigquery.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
+if (AUTH_PATH / os.getenv('SERVICE_ACCOUNT_FILE')).exists():
+    bq_path = AUTH_PATH / os.getenv('SERVICE_ACCOUNT_FILE')
+
+elif (AUTH_PATH / os.getenv('SERVICE_ACCOUNT_AUTH')).exists():
+    bq_path = AUTH_PATH / os.getenv('SERVICE_ACCOUNT_AUTH')
+    print(os.getenv('SERVICE_ACCOUNT_AUTH'))
+    with open(bq_path, 'w') as f:
+        f.write(os.getenv('SERVICE_ACCOUNT_AUTH'))
+
+write_client = bigquery.Client.from_service_account_json(bq_path)
 dataset = write_client.dataset(GCP_DATASET_NAME)
 
 def get_latest_date() -> str:
