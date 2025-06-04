@@ -27,7 +27,7 @@ GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
 AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 if not AUTH_PATH.exists():
     with open(AUTH_PATH, 'w') as f:
-        f.write(os.getenv(os.getenv('SERVICE_ACCOUNT_FILE')))
+        f.write(os.getenv('SERVICE_ACCOUNT_FILE'))
 
 write_client = bigquery.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 dataset = write_client.dataset(GCP_DATASET_NAME)
