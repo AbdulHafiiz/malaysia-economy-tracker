@@ -33,6 +33,12 @@ elif auth_file := os.getenv(os.getenv('SERVICE_ACCOUNT_FILE')):
     with open(AUTH_PATH, 'w') as f:
         f.write(auth_file)
 else:
+    print(dedent(
+        f'''
+        {os.getenv('SERVICE_ACCOUNT_FILE')}
+        {os.environ}
+        '''
+    ))
     raise ValueError('Failed to load bigquery auth credentials')
 
 write_client = bigquery.Client.from_service_account_json(AUTH_PATH)
