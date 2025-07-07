@@ -57,5 +57,4 @@ def sync_district_table(period:Literal['weekly', 'monthly']):
     print(res)
 
 if __name__ == '__main__':
-    sync_district_table('weekly')
     sync_district_table('monthly')
