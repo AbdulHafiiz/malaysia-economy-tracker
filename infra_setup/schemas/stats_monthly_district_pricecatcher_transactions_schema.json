@@ -31,6 +31,12 @@
             "description": null
         },
         {
+            "name": "item_name",
+            "field_type": "STRING",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
             "name": "min_price",
             "field_type": "FLOAT",
             "mode": "NULLABLE",

@@ -36,7 +36,7 @@ def sync_district_table(period:Literal['weekly', 'monthly']):
 
     query = f'''
     INSERT INTO `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.stats_{period}_district_pricecatcher_transactions` (
-        {period_str.lower()}_start, state, district, premise_type, item_code, min_price, max_price, mean_price
+        {period_str.lower()}_start, state, district, premise_type, item_code, item_name, min_price, max_price, mean_price
     )
     WITH unmoved_data AS (
         SELECT *
@@ -47,17 +47,22 @@ def sync_district_table(period:Literal['weekly', 'monthly']):
         )
     )
     SELECT
-        TIMESTAMP_TRUNC(date, {period_str}) AS {period_str.lower()}_start, ppl.state, ppl.district, ppl.premise_type, unmoved_data.item_code,
+        TIMESTAMP_TRUNC(date, {period_str}) AS {period_str.lower()}_start,
+        ppl.state, ppl.district, ppl.premise_type,
+        unmoved_data.item_code, pil.item AS item_name,
         MIN(price) AS min_price, MAX(price) AS max_price,
-        ROUND(AVG(price), 2) AS average_price
+        ROUND(AVG(price), 2) AS mean_pricepp
     FROM unmoved_data
-    LEFT JOIN `{GCP_DATASET_NAME}.pricecatcher_premise_lookup` AS ppl
+    LEFT JOIN `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup` AS ppl
         ON ppl.premise_code = unmoved_data.premise_code
+    LEFT JOIN `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup` AS pil
+        ON pil.item_code = unmoved_data.item_code
     WHERE
         1=1
         AND ppl.district IS NOT NULL
-    GROUP BY TIMESTAMP_TRUNC(date, {period_str}), ppl.state, ppl.district, ppl.premise_type, unmoved_data.item_code
-    ORDER BY TIMESTAMP_TRUNC(date, {period_str}), ppl.state, ppl.district, ppl.premise_type, unmoved_data.item_code
+        AND pil.item IS NOT NULL
+    GROUP BY TIMESTAMP_TRUNC(date, {period_str}), ppl.state, ppl.district, ppl.premise_type, unmoved_data.item_code, pil.item
+    ORDER BY TIMESTAMP_TRUNC(date, {period_str}), ppl.state, ppl.district, ppl.premise_type, unmoved_data.item_code, pil.item
     '''
     res = client.query_and_wait(query)
     print(res)
