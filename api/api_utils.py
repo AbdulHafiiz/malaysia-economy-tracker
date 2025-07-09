@@ -1,6 +1,8 @@
 import re
+import logging
 from ast import literal_eval
 from pydantic import BaseModel
+from google.cloud import bigquery
 from collections import defaultdict
 
 DATATYPE_MATCHING = {
@@ -9,11 +11,15 @@ DATATYPE_MATCHING = {
     'datetime.date': 'TIMESTAMP',
 }
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename="logs/api_utils.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 def infer_model_datatypes(model: BaseModel):
+    # Iterates over Pydantic model fields to match them with 
     datatype_dict = defaultdict(list)
     for name, datatype in model.model_fields.items():
         field_annotation = str(datatype.annotation)
-        print(name, field_annotation, sep=': ')
         if arr_type := re.search(r'(list|tuple)(?=\[.*?\])', field_annotation):
             datatype_dict[name].append(arr_type.group(0))
 
@@ -26,6 +32,69 @@ def infer_model_datatypes(model: BaseModel):
                 for obj in literal_eval(literal_type.group(0))
             }])
     return datatype_dict
+
+
+def query_builder(search_options: BaseModel, special_fields: list):
+    query_filter = []
+    query_params = []
+    for search_field, datatype in infer_model_datatypes(search_options).items():
+        if search_field in special_fields:
+            continue
+
+        search_data = getattr(search_options, search_field, False)
+        if 'list' in datatype and search_data:
+            if len(datatype[1:]) > 1:
+                logging.warning('Mixed datatypes detected in input, attempting to coerce data into string.')
+                search_data = [str(i) for i in search_data]
+                datatype = ['list', 'STRING']
+
+            query_filter.append(
+                f'\nAND {search_field} IN UNNEST(@{search_field})' if search_data else f'\nAND {search_field} IS NOT NULL'
+            )
+            query_params.append(
+                bigquery.ArrayQueryParameter(search_field, datatype[1], search_data)
+            )
+
+        elif 'tuple' in datatype:
+            search_start, search_end = None, None
+            try:
+                search_start, search_end = search_data
+                assert isinstance(search_start, int)
+                assert isinstance(search_end, int)
+            except (ValueError, TypeError):
+                logging.info(f'Omitting {search_field} from filter')
+                continue
+            except AssertionError:
+                logging.warning('Non-integral datatype detected in input, attempting to coerce data into integer.')
+                try:
+                    search_start = int(search_data[0])
+                    search_end = int(search_data[1])
+                except TypeError:
+                    logging.error(f'Failed to convert inputs into integers, skipping {search_field}.')
+
+            if search_start and search_end:
+                query_filter.append(f'\nAND {search_field} BETWEEN @{search_field}_start AND @{search_field}_end')
+                query_params.extend([
+                    bigquery.ScalarQueryParameter(f'{search_field}_start', datatype[1], search_start),
+                    bigquery.ScalarQueryParameter(f'{search_field}_end', datatype[1], search_end),
+                ])
+            elif search_start and not search_end:
+                query_filter.append(f'\nAND {search_field} >= @{search_field}_start')
+                query_params.append(bigquery.ScalarQueryParameter(f'{search_field}_start', datatype[1], search_start))
+            elif search_end and not search_start:
+                query_filter.append(f'\nAND {search_field} <= @{search_field}_end')
+                query_params.append(bigquery.ScalarQueryParameter(f'{search_field}_end', datatype[1], search_end))
+            else:
+                query_filter.append(f'\nAND {search_field} IS NOT NULL')
+
+        elif len(datatype) < 2:
+            query_filter.append(f'\nAND {search_field} = @{search_field}' if search_data else f'\nAND {search_field} IS NOT NULL')
+            query_params.append(bigquery.ScalarQueryParameter(search_field, datatype[1], search_data))
+
+        else:
+            logger.warning(f'Unknown datatype {datatype} for {search_field}, skipping {search_field} filter.')
+
+    return query_filter, query_params
 
 
 if __name__ == '__main__':
