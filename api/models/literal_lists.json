@@ -1,0 +1,49 @@
+{
+    "PREMISE_TYPE_LIST": [
+        "Borong", "Foodcourt", "Hypermarket",
+        "Kedai Runcit", "Kedai Serbaneka",
+        "Medan Selera", "Pasar Basah", "Pasar Basah ",
+        "Pasar Mini", "Pasar Raya / Supermarket",
+        "Restoran Cina", "Restoran India Muslim",
+        "Restoran Melayu"
+    ],
+    "STATE_LIST": [
+        "W.P. Kuala Lumpur", "Negeri Sembilan",
+        "Johor", "Perlis", "Terengganu",
+        "Selangor", "Pahang", "Kedah", "Perak",
+        "Pulau Pinang", "Sarawak", "Kelantan",
+        "W.P. Labuan", "Sabah", "Melaka",
+        "W.P. Putrajaya"
+    ],
+    "ITEM_GROUP": [
+        "BARANGAN BERBUNGKUS", "BARANGAN KEDAI SERBANEKA",
+        "BARANGAN KERING", "BARANGAN SEGAR",
+        "MAKANAN SIAP MASAK", "MINUMAN",
+        "PRODUK KEBERSIHAN", "SUSU DAN BARANGAN BAYI"
+    ],
+    "ITEM_CATEGORY": [
+        "MENTEGA", "BERAS", "BIHUN", "ESEN DAN RAGI",
+        "GULA", "IKAN DALAM TIN", "KICAP DAN SOS",
+        "KRIMER DAN SUSU TEPUNG", "MI SEGERA",
+        "MINYAK DAN LEMAK", "REMPAH RATUS (BERBUNGKUS)",
+        "REMPAH RATUS (TIDAK BERBUNGKUS)", "ROTI",
+        "SANTAN (KOTAK)", "SAPUAN (SPREADS)",
+        "TEPUNG", "MOUTH WASH", "MAKANAN SEGERA",
+        "MAJALAH", "BERUS GIGI", "UBAT GIGI",
+        "TUALA WANITA", "SYAMPU", "TISU",
+        "PENGHALAU NYAMUK", "SABUN BADAN",
+        "PEWANGI RUMAH", "ALAT TULIS DAN BAHAN BACAAN",
+        "BISKUT", "COKLAT", "MAKANAN RINGAN",
+        "MINUMAN", "UBAT-UBATAN", "CILI KERING",
+        "BAWANG", "HASIL LAUT KERING", "KACANG",
+        "UBI KENTANG", "MEE/KUETIAU", "TAUHU DAN TEMPE",
+        "AYAM", "BAHAN LAUT", "BUAH-BUAHAN",
+        "DAGING", "IKAN DARAT", "KELAPA",
+        "SAYUR-SAYURAN", "TELUR", "LAIN-LAIN", "LAUK",
+        "MEE / BIHUN / KUEY TEOW", "NASI",
+        "BAHAN-BAHAN MINUMAN", "TERSEDIA MINUM",
+        "PENJAGAAN DIRI", "PENJAGAAN RUMAH",
+        "LAMPIN PAKAI BUANG", "MAKANAN BAYI",
+        "SUSU BAYI"
+    ]
+}
