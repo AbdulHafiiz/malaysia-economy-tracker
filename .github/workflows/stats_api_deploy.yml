@@ -1,0 +1,50 @@
+on:
+  push:
+    branches:
+      - stats-api
+  pull_request:
+    branches:
+      - stats-api
+
+jobs:
+  dockerize-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Google Cloud Auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+          project_id: '${{ secrets.GCP_PROJECT_ID }}'
+
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Docker Auth
+        uses: docker/login-action@v3
+        with:
+          username: _json_key
+          registry: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/stats-api'
+          password: '${{ secrets.GOOGLE_CREDENTIALS }}'
+
+      - name: Build and Push Container
+        if: success()
+        run: |
+          export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/stats-api/stats-api:${{ github.sha }}'
+          docker compose -f ./docker/docker-compose.yml up --build
+          docker push ${DOCKER_TAG}
+          docker logout
+
+      - name: Deploy to Cloud Run
+        if: success()
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          job: 'stats-api'
+          region: '${{ secrets.GCP_REGION }}'
+          image: '${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/stats-api/stats-api:${{ github.sha }}'
+          flags: >
+            '--service-account=${{ secrets.SERVICE_ACCOUNT_EMAIL }}'
+            '--update-secrets=ENV_FILE=${{ secrets.PRICECATCHER_ENV }}:latest,stats-api-auth=${{ secrets.PRICECATCHER_CREDENTIALS }}:latest'
