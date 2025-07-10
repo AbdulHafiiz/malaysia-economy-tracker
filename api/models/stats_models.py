@@ -10,10 +10,11 @@ with open (ROOT_DIR / 'api/models/literal_lists.json', 'r') as f:
 
 PREMISE_TYPE_LIST = config_json['PREMISE_TYPE_LIST']
 STATE_LIST = config_json['STATE_LIST']
-ITEM_GROUP = ['ITEM_GROUP']
-ITEM_CATEGORY = ['ITEM_CATEGORY']
+ITEM_GROUP = config_json['ITEM_GROUP']
+ITEM_CATEGORY = config_json['ITEM_CATEGORY']
 
 class PremiseSearchOptions(BaseModel):
+    premise_code: Optional[list[int]] = None
     premise_type: Optional[list[Literal[*PREMISE_TYPE_LIST]]] = None
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[str]] = None
@@ -29,7 +30,7 @@ class ItemSearchOptions(BaseModel):
     limit: Optional[int] = Field(10, ge=1)
 
 class PricecatcherStatsSearch(BaseModel):
-    month_start: Optional[list[datetime]] = datetime.now().date().strftime('%Y-%m-01')
+    month_start: Optional[list[datetime]] = [datetime.now().date().strftime('%Y-%m-01')]
     premise_type: Optional[list[Literal[*PREMISE_TYPE_LIST]]] = None
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[str]] = None
