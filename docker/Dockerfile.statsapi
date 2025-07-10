@@ -13,4 +13,4 @@ RUN pip install --upgrade pip && \
 
 EXPOSE 8080
 
-ENTRYPOINT ["fastapi", "run", "/code/api/stats_main.py", "--port", "8080"]
+ENTRYPOINT ["fastapi", "run", "/code/api/main.py", "--port", "8080"]
