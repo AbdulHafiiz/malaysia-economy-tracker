@@ -13,6 +13,7 @@ if load_dotenv(FILEPATH / 'secrets/.env', override=True):
     print('Loaded .env file')
 elif env_file := os.getenv('ENV_FILE'):
     load_dotenv(stream=StringIO(env_file))
+    print(os.environ.keys())
     print('Loaded .env file')
 else:
     raise ValueError('Failed to load .env variables')
