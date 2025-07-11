@@ -9,15 +9,13 @@ from models.stats_models import PremiseSearchOptions, ItemSearchOptions, Priceca
 
 
 FILEPATH = Path(__file__).parents[1]
+print(os.environ.keys())
 if load_dotenv(FILEPATH / 'secrets/.env', override=True):
-    print(os.environ.keys())
     print('Loaded .env file via dotenv.')
 elif env_file := os.getenv('ENV_FILE'):
     load_dotenv(stream=StringIO(env_file))
-    print(os.environ.keys())
     print('Loaded .env file via StringIO.')
 else:
-    print(os.environ.keys())
     raise ValueError('Failed to load .env variables')
 
 
