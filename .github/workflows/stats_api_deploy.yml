@@ -34,7 +34,7 @@ jobs:
         if: success()
         run: |
           export DOCKER_TAG='${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/stats-api/stats-api:${{ github.sha }}'
-          docker compose -f ./docker/docker-compose.yml up --build
+          docker compose -f ./docker/docker-compose-statsapi.yml up --build
           docker push ${DOCKER_TAG}
           docker logout
 
