@@ -1,6 +1,10 @@
+import os
 import re
 import logging
+from io import StringIO
+from pathlib import Path
 from ast import literal_eval
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from google.cloud import bigquery
 from collections import defaultdict
@@ -11,6 +15,17 @@ DATATYPE_MATCHING = {
     'datetime.date': 'TIMESTAMP',
 }
 
+FILEPATH = Path(__file__).parents[1]
+print(os.environ.keys())
+if load_dotenv(FILEPATH / 'secrets/.env', override=True):
+    print('Loaded .env file via dotenv.')
+elif env_file := os.getenv('ENV_FILE'):
+    load_dotenv(stream=StringIO(env_file))
+    print('Loaded .env file via StringIO.')
+else:
+    raise ValueError('Failed to load .env variables')
+
+client = bigquery.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename="logs/api_utils.log", filemode="a", level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
