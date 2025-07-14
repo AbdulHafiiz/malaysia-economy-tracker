@@ -35,6 +35,7 @@ class PricecatcherStatsSearch(BaseModel):
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[str]] = None
     item_code: Optional[list[int]] = None
+    item_name: Optional[list[str]] = None
     min_price: tuple[Optional[int], Optional[int]] = None
     max_price: tuple[Optional[int], Optional[int]] = None
     mean_price: tuple[Optional[int], Optional[int]] = None
