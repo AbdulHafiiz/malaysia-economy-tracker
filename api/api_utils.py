@@ -1,10 +1,6 @@
-import os
 import re
 import logging
-from io import StringIO
-from pathlib import Path
 from ast import literal_eval
-from dotenv import load_dotenv
 from pydantic import BaseModel
 from google.cloud import bigquery
 from collections import defaultdict
