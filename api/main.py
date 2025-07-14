@@ -50,6 +50,7 @@ async def search_item(search_options: ItemSearchOptions):
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', getattr(search_options, 'limit')))
 
     query = ''.join([f'SELECT * FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`\nWHERE 1=1', *query_filter])
+    print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
 
     item_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
@@ -68,6 +69,7 @@ async def search_premise(search_options: PremiseSearchOptions):
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', getattr(search_options, 'limit')))
 
     query = ''.join([f'SELECT * FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup` WHERE 1=1', *query_filter])
+    print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
     premise_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
 
@@ -96,6 +98,7 @@ async def search_stats(search_options: PricecatcherStatsSearch):
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', limit_val))
 
     query = ''.join([f'SELECT* FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.stats_monthly_district_pricecatcher_transactions`\nWHERE 1=1', *query_filter])
+    print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
 
     stats_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
