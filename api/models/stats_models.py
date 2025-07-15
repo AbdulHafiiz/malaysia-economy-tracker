@@ -1,12 +1,10 @@
 import json
-import pandas as pd
 from pathlib import Path
 from datetime import datetime
 from pydantic import BaseModel, Field
-from typing import Literal, Optional, Union
+from typing import Literal, Optional
 
 ROOT_DIR = Path(__file__).parents[2]
-state_district_df = pd.read_csv(ROOT_DIR / 'api/models/malaysia_state_districts.csv')
 with open (ROOT_DIR / 'api/models/literal_lists.json', 'r') as f:
     config_json = json.loads(f.read())
 
