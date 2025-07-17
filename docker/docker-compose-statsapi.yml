@@ -1,0 +1,8 @@
+services:
+  stats-api:
+    build:
+      context: "${PWD}"
+      dockerfile: "${PWD}/docker/Dockerfile.statsapi"
+    image: $DOCKER_TAG
+    ports:
+      - 8080

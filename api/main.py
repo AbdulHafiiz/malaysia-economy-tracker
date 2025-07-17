@@ -1,5 +1,5 @@
 import os
-import pandas as pd
+from io import StringIO
 from pathlib import Path
 from dotenv import load_dotenv
 from google.cloud import bigquery
@@ -9,12 +9,30 @@ from models.stats_models import PremiseSearchOptions, ItemSearchOptions, Priceca
 
 
 FILEPATH = Path(__file__).parents[1]
-load_dotenv(FILEPATH / 'secrets/.env', override=True)
+if load_dotenv(FILEPATH / 'secrets/.env', override=True):
+    print('Loaded .env file via dotenv.')
+elif env_file := os.getenv('ENV_FILE'):
+    load_dotenv(stream=StringIO(env_file))
+    print('Loaded .env file via StringIO.')
+else:
+    raise ValueError('Failed to load .env variables')
+
 
 GCP_PROJECT_NAME = os.getenv('GCP_PROJECT_NAME')
 GCP_DATASET_NAME = os.getenv('GCP_DATASET_NAME')
+AUTH_PATH = Path(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
 
-client = bigquery.Client.from_service_account_json(FILEPATH / 'secrets' / os.getenv('SERVICE_ACCOUNT_FILE'))
+if AUTH_PATH.exists():
+    print(f'Auth Path Local: {AUTH_PATH}')
+elif auth_file := os.getenv("stats-api-auth"):
+    print(f'Auth Path Cloud {AUTH_PATH}')
+    with open(AUTH_PATH, 'w') as f:
+        f.write(auth_file)
+else:
+    print("stats-api-auth")
+    raise ValueError('Failed to load bigquery auth credentials')
+
+client = bigquery.Client.from_service_account_json(AUTH_PATH)
 
 app = FastAPI()
 
@@ -32,6 +50,7 @@ async def search_item(search_options: ItemSearchOptions):
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', getattr(search_options, 'limit')))
 
     query = ''.join([f'SELECT * FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`\nWHERE 1=1', *query_filter])
+    print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
 
     item_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
@@ -42,7 +61,7 @@ async def search_item(search_options: ItemSearchOptions):
     return {'name': 'item_search', 'data': item_list}
 
 
-@app.post('/pricecatcher/premise/search')
+@app.post('/pricecatcher/premise/search/')
 async def search_premise(search_options: PremiseSearchOptions):
     query_filter, query_params = query_builder(search_options, ['limit'])
     if search_options.limit:
@@ -50,6 +69,7 @@ async def search_premise(search_options: PremiseSearchOptions):
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', getattr(search_options, 'limit')))
 
     query = ''.join([f'SELECT * FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup` WHERE 1=1', *query_filter])
+    print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
     premise_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
 
@@ -78,6 +98,7 @@ async def search_stats(search_options: PricecatcherStatsSearch):
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', limit_val))
 
     query = ''.join([f'SELECT* FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.stats_monthly_district_pricecatcher_transactions`\nWHERE 1=1', *query_filter])
+    print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
 
     stats_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]

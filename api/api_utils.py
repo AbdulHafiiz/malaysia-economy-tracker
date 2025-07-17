@@ -7,6 +7,7 @@ from collections import defaultdict
 
 DATATYPE_MATCHING = {
     'int': 'INTEGER',
+    'float': 'FLOAT',
     'str': 'STRING',
     'datetime.date': 'TIMESTAMP',
 }
