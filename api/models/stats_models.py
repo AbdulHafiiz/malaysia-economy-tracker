@@ -32,7 +32,7 @@ class ItemSearchOptions(BaseModel):
     limit: Optional[int] = Field(10, ge=1)
 
 class PricecatcherStatsSearch(BaseModel):
-    month_start: Optional[list[datetime]] = [datetime.now().date().strftime('%Y-%m-01')]
+    month_start: Optional[list[datetime]] = [datetime.now().date()]
     premise_type: Optional[list[Literal[*PREMISE_TYPE_LIST]]] = None
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[Literal[*DISTRICT_LIST]]] = None
