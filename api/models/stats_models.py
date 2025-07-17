@@ -38,7 +38,7 @@ class PricecatcherStatsSearch(BaseModel):
     district: Optional[list[Literal[*DISTRICT_LIST]]] = None
     item_code: Optional[list[int]] = None
     item_name: Optional[list[str]] = None
-    min_price: tuple[Optional[int], Optional[int]] = None
-    max_price: tuple[Optional[int], Optional[int]] = None
-    mean_price: tuple[Optional[int], Optional[int]] = None
+    min_price: tuple[Optional[float], Optional[float]] = None
+    max_price: tuple[Optional[float], Optional[float]] = None
+    mean_price: tuple[Optional[float], Optional[float]] = None
     limit: Optional[int] = Field(10, ge=1)
