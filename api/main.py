@@ -61,7 +61,7 @@ async def search_item(search_options: ItemSearchOptions):
     return {'name': 'item_search', 'data': item_list}
 
 
-@app.post('/pricecatcher/premise/search/')
+@app.post('/pricecatcher/premise/search')
 async def search_premise(search_options: PremiseSearchOptions):
     query_filter, query_params = query_builder(search_options, ['limit'])
     if search_options.limit:
