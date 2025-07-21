@@ -56,9 +56,23 @@ async def search_item(search_options: ItemSearchOptions):
     item_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
 
     if not item_list:
-        raise HTTPException(status_code=204)
+        raise HTTPException(status_code=204, detail='Query returns no rows. Try selecting different filter values.')
 
     return {'name': 'item_search', 'data': item_list}
+
+
+@app.post('/pricecatcher/item/list')
+async def item_group_category_list():
+    query = '''SELECT DISTINCT item_group, item_category
+    FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`
+    WHERE item_group IS NOT NULL'''
+    print(f'Running query: {query}')
+    group_category_list = [dict(row) for row in client.query_and_wait(query=query)]
+    
+    if not group_category_list:
+        raise HTTPException(status_code=204, detail='Query returns no rows. Try selecting different filter values.')
+    
+    return {'name': 'item_group_category', 'data': group_category_list}
 
 
 @app.post('/pricecatcher/premise/search')
@@ -74,7 +88,7 @@ async def search_premise(search_options: PremiseSearchOptions):
     premise_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
 
     if not premise_list:
-        raise HTTPException(status_code=204)
+        raise HTTPException(status_code=204, detail='Query returns no rows. Try selecting different filter values.')
 
     return {'name': 'premise_search', 'data': premise_list}
 
@@ -104,6 +118,6 @@ async def search_stats(search_options: PricecatcherStatsSearch):
     stats_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
 
     if not stats_list:
-        raise HTTPException(status_code=204)
+        raise HTTPException(status_code=204, detail='Query returns no rows. Try selecting different filter values.')
 
     return {'name': 'monthly_stats_search', 'data': stats_list}
