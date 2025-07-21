@@ -63,7 +63,7 @@ async def search_item(search_options: ItemSearchOptions):
 
 @app.post('/pricecatcher/item/list/group_category')
 async def item_group_category_list():
-    query = '''SELECT DISTINCT item_group, item_category
+    query = f'''SELECT DISTINCT item_group, item_category
     FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`
     WHERE item_group IS NOT NULL'''
     print(f'Running query: {query}')
@@ -91,6 +91,20 @@ async def search_premise(search_options: PremiseSearchOptions):
         raise HTTPException(status_code=204, detail='Query returns no rows. Try selecting different filter values.')
 
     return {'name': 'premise_search', 'data': premise_list}
+
+
+@app.post('/pricecatcher/premise/list/state_district')
+async def premise_state_district_list():
+    query = f'''SELECT DISTINCT state, district
+    FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup`
+    WHERE state IS NOT NULL'''
+    print(f'Running query: {query}')
+    state_district_list = [dict(row) for row in client.query_and_wait(query=query)]
+    
+    if not state_district_list:
+        raise HTTPException(status_code=204, detail='Query returns no rows. Try selecting different filter values.')
+
+    return {'name': 'premise_state_district', 'data': state_district_list}
 
 
 @app.post('/pricecatcher/stats/search')
