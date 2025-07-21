@@ -61,7 +61,7 @@ async def search_item(search_options: ItemSearchOptions):
     return {'name': 'item_search', 'data': item_list}
 
 
-@app.post('/pricecatcher/item/list')
+@app.post('/pricecatcher/item/list/group_category')
 async def item_group_category_list():
     query = '''SELECT DISTINCT item_group, item_category
     FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`
