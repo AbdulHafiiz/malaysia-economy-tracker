@@ -93,11 +93,12 @@ async def search_premise(search_options: PremiseSearchOptions):
     return {'name': 'premise_search', 'data': premise_list}
 
 
-@app.post('/pricecatcher/premise/list/state_district')
+@app.post('/pricecatcher/premise/list/state_district_premise')
 async def premise_state_district_list():
-    query = f'''SELECT DISTINCT state, district
+    query = f'''SELECT state, district, ARRAY_AGG(DISTINCT premise_type) AS premise_list
     FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup`
-    WHERE state IS NOT NULL'''
+    WHERE state IS NOT NULL
+    GROUP BY state, district'''
     print(f'Running query: {query}')
     state_district_list = [dict(row) for row in client.query_and_wait(query=query)]
     
