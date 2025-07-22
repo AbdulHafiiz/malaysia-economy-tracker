@@ -1,0 +1,63 @@
+{
+    "columns": [
+        {
+            "name": "month_start",
+            "field_type": "TIMESTAMP",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "premise_code",
+            "field_type": "INTEGER",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "item_code",
+            "field_type": "INTEGER",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "min_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "max_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "mean_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "median_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "opening_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "closing_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        }
+    ],
+    "partitions": {
+        "type": "TIME",
+        "field": "month_start",
+        "range": "MONTH"
+    }
+}

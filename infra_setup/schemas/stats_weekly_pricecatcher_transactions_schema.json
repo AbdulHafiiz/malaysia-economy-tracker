@@ -1,38 +1,20 @@
 {
     "columns": [
         {
-            "name": "month_start",
+            "name": "week_start",
             "field_type": "TIMESTAMP",
             "mode": "NULLABLE",
             "description": null
         },
         {
-            "name": "state",
-            "field_type": "STRING",
-            "mode": "NULLABLE",
-            "description": null
-        },
-        {
-            "name": "district",
-            "field_type": "STRING",
-            "mode": "NULLABLE",
-            "description": null
-        },
-        {
-            "name": "premise_type",
-            "field_type": "STRING",
+            "name": "premise_code",
+            "field_type": "INTEGER",
             "mode": "NULLABLE",
             "description": null
         },
         {
             "name": "item_code",
             "field_type": "INTEGER",
-            "mode": "NULLABLE",
-            "description": null
-        },
-        {
-            "name": "item_name",
-            "field_type": "STRING",
             "mode": "NULLABLE",
             "description": null
         },
@@ -53,11 +35,29 @@
             "field_type": "FLOAT",
             "mode": "NULLABLE",
             "description": null
+        },
+        {
+            "name": "median_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "opening_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
+        },
+        {
+            "name": "closing_price",
+            "field_type": "FLOAT",
+            "mode": "NULLABLE",
+            "description": null
         }
     ],
     "partitions": {
         "type": "TIME",
-        "field": "month_start",
+        "field": "week_start",
         "range": "MONTH"
     }
 }
