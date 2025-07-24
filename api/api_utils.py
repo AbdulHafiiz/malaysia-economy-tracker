@@ -9,7 +9,7 @@ DATATYPE_MATCHING = {
     'int': 'INTEGER',
     'float': 'FLOAT',
     'str': 'STRING',
-    'datetime.date': 'TIMESTAMP',
+    'datetime.datetime': 'TIMESTAMP',
 }
 
 logger = logging.getLogger(__name__)
@@ -38,10 +38,12 @@ def infer_model_datatypes(model: BaseModel):
 def query_builder(search_options: BaseModel, special_fields: list):
     query_filter = []
     query_params = []
+    query_cols = []
     for search_field, datatype in infer_model_datatypes(search_options).items():
         if search_field in special_fields:
             continue
 
+        query_cols.append(search_field)
         search_data = getattr(search_options, search_field, False)
         if 'list' in datatype and search_data:
             if len(datatype[1:]) > 1:
@@ -57,34 +59,34 @@ def query_builder(search_options: BaseModel, special_fields: list):
             )
 
         elif 'tuple' in datatype:
-            search_start, search_end = None, None
+            search_lower_bound, search_upper_bound = None, None
             try:
-                search_start, search_end = search_data
-                assert isinstance(search_start, int)
-                assert isinstance(search_end, int)
+                search_lower_bound, search_upper_bound = search_data
+                assert isinstance(search_lower_bound, int)
+                assert isinstance(search_upper_bound, int)
             except (ValueError, TypeError):
                 logging.info(f'Omitting {search_field} from filter')
                 continue
             except AssertionError:
                 logging.warning('Non-integral datatype detected in input, attempting to coerce data into integer.')
                 try:
-                    search_start = int(search_data[0])
-                    search_end = int(search_data[1])
+                    search_lower_bound = int(search_data[0])
+                    search_upper_bound = int(search_data[1])
                 except TypeError:
                     logging.error(f'Failed to convert inputs into integers, skipping {search_field}.')
 
-            if search_start and search_end:
-                query_filter.append(f'\nAND {search_field} BETWEEN @{search_field}_start AND @{search_field}_end')
+            if search_lower_bound and search_upper_bound:
+                query_filter.append(f'\nAND {search_field} BETWEEN @{search_field}_lower_bound AND @{search_field}_upper_bound')
                 query_params.extend([
-                    bigquery.ScalarQueryParameter(f'{search_field}_start', datatype[1], search_start),
-                    bigquery.ScalarQueryParameter(f'{search_field}_end', datatype[1], search_end),
+                    bigquery.ScalarQueryParameter(f'{search_field}_lower_bound', datatype[1], search_lower_bound),
+                    bigquery.ScalarQueryParameter(f'{search_field}_upper_bound', datatype[1], search_upper_bound),
                 ])
-            elif search_start and not search_end:
-                query_filter.append(f'\nAND {search_field} >= @{search_field}_start')
-                query_params.append(bigquery.ScalarQueryParameter(f'{search_field}_start', datatype[1], search_start))
-            elif search_end and not search_start:
-                query_filter.append(f'\nAND {search_field} <= @{search_field}_end')
-                query_params.append(bigquery.ScalarQueryParameter(f'{search_field}_end', datatype[1], search_end))
+            elif search_lower_bound and not search_upper_bound:
+                query_filter.append(f'\nAND {search_field} >= @{search_field}_lower_bound')
+                query_params.append(bigquery.ScalarQueryParameter(f'{search_field}_lower_bound', datatype[1], search_lower_bound))
+            elif search_upper_bound and not search_lower_bound:
+                query_filter.append(f'\nAND {search_field} <= @{search_field}_upper_bound')
+                query_params.append(bigquery.ScalarQueryParameter(f'{search_field}_upper_bound', datatype[1], search_upper_bound))
             else:
                 query_filter.append(f'\nAND {search_field} IS NOT NULL')
 
@@ -95,7 +97,7 @@ def query_builder(search_options: BaseModel, special_fields: list):
         else:
             logger.warning(f'Unknown datatype {datatype} for {search_field}, skipping {search_field} filter.')
 
-    return query_filter, query_params
+    return query_filter, query_params, query_cols
 
 
 if __name__ == '__main__':
