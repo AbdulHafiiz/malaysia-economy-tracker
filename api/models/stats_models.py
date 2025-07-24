@@ -1,6 +1,6 @@
 import json
+import datetime
 from pathlib import Path
-from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Literal, Optional
 
@@ -32,13 +32,15 @@ class ItemSearchOptions(BaseModel):
     limit: Optional[int] = Field(10, ge=1)
 
 class PricecatcherStatsSearch(BaseModel):
-    month_start: Optional[list[datetime]] = [datetime.now().date()]
+    month_start: tuple[Optional[datetime.datetime], Optional[datetime.datetime]] = [
+        *(datetime.datetime.now().date().strftime('%Y-%m-%d'), )*2 # Unwraps a tuple of date strings into a list
+    ]
     premise_type: Optional[list[Literal[*PREMISE_TYPE_LIST]]] = None
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[Literal[*DISTRICT_LIST]]] = None
-    item_code: Optional[list[int]] = None
-    item_name: Optional[list[str]] = None
+    item: Optional[list[str]] = None
     min_price: tuple[Optional[float], Optional[float]] = None
     max_price: tuple[Optional[float], Optional[float]] = None
     mean_price: tuple[Optional[float], Optional[float]] = None
+    median_price: tuple[Optional[float], Optional[float]] = None
     limit: Optional[int] = Field(10, ge=1)
