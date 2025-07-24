@@ -108,26 +108,43 @@ async def premise_state_district_list():
     return {'name': 'premise_state_district', 'data': state_district_list}
 
 
+# TODO: Add in weekly and monthly endpoints
 @app.post('/pricecatcher/stats/search')
 async def search_stats(search_options: PricecatcherStatsSearch):
-    special_fields = ['limit', 'month_start']
+    special_fields = ['limit']
     query_filter = []
     query_params = []
 
-    if month_start := getattr(search_options, 'month_start', False):
-        query_filter.append('\nAND month_start IN UNNEST(@month_start)')
-        query_params.append(bigquery.ArrayQueryParameter('month_start', 'TIMESTAMP', [dt.strftime('%Y-%m-01') for dt in month_start]))
+    # if month_start := getattr(search_options, 'month_start', False):
+    #     query_filter.append('\nAND month_start BETWEEN UNNEST(@month_start)')
+    #     query_params.append(bigquery.ArrayQueryParameter('month_start', 'TIMESTAMP', [dt.strftime('%Y-%m-01') for dt in month_start]))
 
     query_body = query_builder(search_options, special_fields)
     query_filter.extend(query_body[0])
     query_params.extend(query_body[1])
+    query_cols = ', '.join(query_body[2])
 
     if limit_val := getattr(search_options, 'limit', False):
         query_filter.append('\nLIMIT @limit')
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', limit_val))
 
-    query = ''.join([f'SELECT* FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.stats_monthly_district_pricecatcher_transactions`\nWHERE 1=1', *query_filter])
-    print(f'Running query: {query}')
+    query = ''.join([
+        'SELECT\n',
+        query_cols,
+        f'''
+        FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.stats_monthly_pricecatcher_transactions` AS smd
+        LEFT JOIN `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup` AS ppl
+            ON smd.premise_code = ppl.premise_code
+        LEFT JOIN `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup` AS pil
+            ON smd.item_code = pil.item_code
+        WHERE 1=1
+            AND pil.item IS NOT NULL
+            AND ppl.premise IS NOT NULL
+        ''',
+        *query_filter
+    ])
+    print(f'Running query:\n{query}')
+    print(query_params)
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
 
     stats_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
