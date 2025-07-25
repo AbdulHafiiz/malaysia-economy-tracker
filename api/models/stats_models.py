@@ -46,7 +46,7 @@ class PricecatcherStatsMontlySearch(BaseModel):
     limit: Optional[int] = Field(10, ge=1)
 
 class PricecatcherStatsWeeklySearch(BaseModel):
-    month_start: tuple[Optional[datetime.datetime], Optional[datetime.datetime]] = [
+    week_start: tuple[Optional[datetime.datetime], Optional[datetime.datetime]] = [
         *(datetime.datetime.now().date().strftime('%Y-%m-%d'), )*2 # Unwraps a tuple of date strings into a list
     ]
     premise_type: Optional[list[Literal[*PREMISE_TYPE_LIST]]] = None
