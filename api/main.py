@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google.cloud import bigquery
 from fastapi import FastAPI, HTTPException
 from api_utils import query_builder
-from models.stats_models import PremiseSearchOptions, ItemSearchOptions, PricecatcherStatsMontlySearch, PricecatcherStatsWeeklySearch
+from models.stats_models import PremiseSearchOptions, ItemSearchOptions, PricecatcherStatsMonthlySearch, PricecatcherStatsWeeklySearch
 
 
 FILEPATH = Path(__file__).parents[1]
@@ -109,7 +109,7 @@ async def premise_state_district_list():
 
 
 @app.post('/pricecatcher/stats/monthly/search')
-async def search_stats(search_options: PricecatcherStatsMontlySearch):
+async def search_stats(search_options: PricecatcherStatsMonthlySearch):
     special_fields = ['limit']
 
     query_body = query_builder(search_options, special_fields)
