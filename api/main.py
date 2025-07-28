@@ -43,13 +43,26 @@ async def test():
 
 @app.post('/pricecatcher/item/search')
 async def search_item(search_options: ItemSearchOptions):
-    query_filter, query_params = query_builder(search_options, ['limit'])
+    special_fields = ['limit']
+    query_body = query_builder(search_options, special_fields)
+    query_filter = query_body[0]
+    query_params = query_body[1]
+    query_cols = ', '.join(query_body[2])
 
     if search_options.limit:
         query_filter.append('\nLIMIT @limit')
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', getattr(search_options, 'limit')))
 
-    query = ''.join([f'SELECT * FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`\nWHERE 1=1', *query_filter])
+    query = ''.join([
+        'SELECT\n',
+        query_cols,
+        f'''
+        FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_item_lookup`
+        WHERE 1=1
+            AND item IS NOT NULL
+        ''',
+        *query_filter
+    ])
     print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
 
@@ -77,12 +90,27 @@ async def item_group_category_list():
 
 @app.post('/pricecatcher/premise/search')
 async def search_premise(search_options: PremiseSearchOptions):
-    query_filter, query_params = query_builder(search_options, ['limit'])
+    special_fields = ['limit']
+    
+    query_body = query_builder(search_options, special_fields)
+    query_filter = query_body[0]
+    query_params = query_body[1]
+    query_cols = ', '.join(query_body[2])
+    
     if search_options.limit:
         query_filter.append('\nLIMIT @limit')
         query_params.append(bigquery.ScalarQueryParameter('limit', 'INTEGER', getattr(search_options, 'limit')))
 
-    query = ''.join([f'SELECT * FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup` WHERE 1=1', *query_filter])
+    query = ''.join([
+        'SELECT\n',
+        query_cols,
+        f'''
+        FROM `{GCP_PROJECT_NAME}.{GCP_DATASET_NAME}.pricecatcher_premise_lookup`
+        WHERE 1=1
+            AND premise IS NOT NULL
+        ''',
+        *query_filter
+    ])
     print(f'Running query: {query}')
     query_config = bigquery.QueryJobConfig(query_parameters=query_params)
     premise_list = [dict(row) for row in client.query_and_wait(query=query, job_config=query_config)]
