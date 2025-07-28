@@ -31,7 +31,7 @@ class ItemSearchOptions(BaseModel):
     item_category: Optional[list[Literal[*ITEM_CATEGORY]]] = None
     limit: Optional[int] = Field(10, ge=1)
 
-class PricecatcherStatsMontlySearch(BaseModel):
+class PricecatcherStatsMonthlySearch(BaseModel):
     month_start: tuple[Optional[datetime.datetime], Optional[datetime.datetime]] = [
         *(datetime.datetime.now().date().strftime('%Y-%m-%d'), )*2 # Unwraps a tuple of date strings into a list
     ]
