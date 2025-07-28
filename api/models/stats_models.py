@@ -39,6 +39,8 @@ class PricecatcherStatsMonthlySearch(BaseModel):
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[Literal[*DISTRICT_LIST]]] = None
     item: Optional[list[str]] = None
+    item_group: Optional[list[Literal[*ITEM_GROUP]]] = None
+    item_category: Optional[list[Literal[*ITEM_CATEGORY]]] = None
     min_price: tuple[Optional[float], Optional[float]] = None
     max_price: tuple[Optional[float], Optional[float]] = None
     mean_price: tuple[Optional[float], Optional[float]] = None
@@ -53,6 +55,8 @@ class PricecatcherStatsWeeklySearch(BaseModel):
     state: Optional[list[Literal[*STATE_LIST]]] = None
     district: Optional[list[Literal[*DISTRICT_LIST]]] = None
     item: Optional[list[str]] = None
+    item_group: Optional[list[Literal[*ITEM_GROUP]]] = None
+    item_category: Optional[list[Literal[*ITEM_CATEGORY]]] = None
     min_price: tuple[Optional[float], Optional[float]] = None
     max_price: tuple[Optional[float], Optional[float]] = None
     mean_price: tuple[Optional[float], Optional[float]] = None
