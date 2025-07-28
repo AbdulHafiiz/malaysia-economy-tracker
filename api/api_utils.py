@@ -62,16 +62,16 @@ def query_builder(search_options: BaseModel, special_fields: list):
             search_lower_bound, search_upper_bound = None, None
             try:
                 search_lower_bound, search_upper_bound = search_data
-                assert isinstance(search_lower_bound, int)
-                assert isinstance(search_upper_bound, int)
+                assert isinstance(search_lower_bound, (int, str))
+                assert isinstance(search_upper_bound, (int, str))
             except (ValueError, TypeError):
                 logging.info(f'Omitting {search_field} from filter')
                 continue
             except AssertionError:
-                logging.warning('Non-integral datatype detected in input, attempting to coerce data into integer.')
+                logging.warning('Non-integral datatype detected in input, attempting to coerce data into string.')
                 try:
-                    search_lower_bound = int(search_data[0])
-                    search_upper_bound = int(search_data[1])
+                    search_lower_bound = str(search_data[0])
+                    search_upper_bound = str(search_data[1])
                 except TypeError:
                     logging.error(f'Failed to convert inputs into integers, skipping {search_field}.')
 
