@@ -29,5 +29,6 @@
         "type": "TIME",
         "field": "date",
         "range": "MONTH"
-    }
+    },
+    "clusters": null
 }

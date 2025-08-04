@@ -59,5 +59,6 @@
         "type": "TIME",
         "field": "week_start",
         "range": "MONTH"
-    }
+    },
+    "clusters": ["premise_code"]
 }

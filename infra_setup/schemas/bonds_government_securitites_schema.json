@@ -59,5 +59,6 @@
         "type": "TIME",
         "field": "trading_date",
         "range": "YEAR"
-    }
+    },
+    "clusters": null
 }
