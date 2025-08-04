@@ -18,5 +18,6 @@
         "type": // See https://cloud.google.com/bigquery/docs/creating-partitioned-tables#python for partition types,
         "field": // The column to partition on
         "range": // 'HOUR', 'DAY', 'MONTH', 'YEAR' for timepartition or interval in the case of integer parititoning
-    }
+    },
+    "clusters": ["columns", "to", "cluster", "on"] // See https://cloud.google.com/bigquery/docs/creating-clustered-tables
 }
