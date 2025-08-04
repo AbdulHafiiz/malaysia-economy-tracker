@@ -26,8 +26,9 @@ logging.basicConfig(filename="logs/bq_table_setup.log", filemode="a", level=logg
 def parse_schema(schema_path:str|Path) -> list:
     with open(schema_path, 'r') as f:
         json_data = json.loads(f.read())
-        schema_json = json_data['columns']
-        partition_json = json_data['partitions']
+        schema_json = json_data.get('columns', None)
+        partition_json = json_data.get('partitions', None)
+        table_clusters = json_data.get('clusters', None)
 
     table_schema = [
         bigquery.SchemaField(**field)
@@ -41,14 +42,14 @@ def parse_schema(schema_path:str|Path) -> list:
             field=partition_json['field']
         )
     elif partition_json['type'] == 'INTEGER':
-        table_partition = bigquery.TimePartitioning(
+        table_partition = bigquery.RangePartitioning(
             range_=bigquery.PartitionRange(interval=partition_json['range']),
             field=partition_json['field']
         )
     else:
         logging.warning(f'Partition type {partition_json["type"]} does not match "TIME" or "INTEGER". Select one of the two to partition the table. Defaulting to no partition.')
 
-    return table_schema, table_partition
+    return table_schema, table_partition, table_clusters
 
 
 def check_table_exists(client:bigquery.Client, table_name:str) -> bool:
@@ -84,7 +85,7 @@ def create_datasets(dir_path:str|Path = FILEPATH / 'infra_setup/schemas') -> Non
                 table_status['exists'].append(table_name)
                 continue
 
-            table_schema, table_partition = parse_schema(schema_path=filepath.path)
+            table_schema, table_partition, table_clusters = parse_schema(schema_path=filepath.path)
             logging.info(f'Parsed schema for table {table_name}')
 
             table = bigquery.Table(table_ref, table_schema)
@@ -99,6 +100,7 @@ def create_datasets(dir_path:str|Path = FILEPATH / 'infra_setup/schemas') -> Non
                 pass
             
             table = client.create_table(table)
+            table.clustering_fields = table_clusters
 
             table_status['successful'].append(table_name)
             logging.info(f'Created Bigquery table {table_name}')
