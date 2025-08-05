@@ -60,5 +60,5 @@
         "field": "month_start",
         "range": "MONTH"
     },
-    "clusters": ["premise_code"]
+    "clusters": null
 }
